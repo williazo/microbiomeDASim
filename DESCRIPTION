@@ -1,0 +1,35 @@
+Package: microbiomeDASim
+Type: Package
+Title: Microbiome Differential Abundance Simulation 
+Version: 0.99.8
+Author: Justin Williams
+Maintainer: Justin Williams <williazo@ucla.edu>
+Description: A toolkit for simulating differential microbiome data designed for
+    longitudinal analyses. Several functional forms may be specified for the
+    mean trend. Observations are drawn from a multivariate normal model. The objective of this
+    package is to be able to simulate data in order to accurately compare different longitudinal
+    methods for differential abundance.
+License: MIT + file LICENSE
+Imports:
+    graphics, 
+    ggplot2,
+    MASS,
+    tmvtnorm,
+    Matrix,
+    mvtnorm,
+    pbapply,
+    stats
+Depends: 
+    R (>= 3.6.0)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Suggests: 
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+biocViews: Microbiome,
+    Visualization,
+    Software
