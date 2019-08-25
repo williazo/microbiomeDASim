@@ -11,7 +11,7 @@ To install microbimeDASim use the following R command below
 
 ``` r
 install.packages("devtools")
-devtools::install_github("willij97/microbiomeDASim", host = "https://github.roche.com/api/v3")
+devtools::install_github("williazo/microbiomeDASim")
 ```
 
 ## Simulation Examples
@@ -27,6 +27,6 @@ for Jupyter NB](https://github.com/IRkernel/IRkernel).
 
 After installing Jupyter and the appopriate kernel you can access an
 interactive simulation session of `microbiomeDASim` using
-[mvrnorm\_demo.ipynb](https://github.roche.com/willij97/microbiomeDASim/blob/master/SIMULATION/mvrnorm_demo.ipynb)
+[mvrnorm\_demo.ipynb](https://github.com/williazo/microbiomeDASim/blob/master/SIMULATION/mvrnorm_demo.ipynb)
 located in the SIMULATIONS tab and which contains details on the
 methodology for setting up the simulations.
