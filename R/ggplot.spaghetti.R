@@ -14,7 +14,7 @@
 #'@param alpha Scalar value between \[0,1\] that specifies the transparencey
 #' of the lineplots.
 #'@param method Character value that specifies which type of method to use for
-#' fitting. Optional methods come from \code{\link[ggplot2]{stat_smooth}}
+#' fitting. Optional methods come from \code{\link[ggplot2]{geom_smooth}}
 #' function.
 #'@param jit Scalar value that specifies how much you want to jitter each
 #' individual observation. Useful if many of the values share the same y values
