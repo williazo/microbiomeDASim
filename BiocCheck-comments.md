@@ -1,4 +1,4 @@
-Date: 08/25/2019, version 0.99.8
+Date: 08/26/2019, version 0.99.0
 ## Test environments
 + local OS X install (version 10.13.6 High Sierra), R 3.6.0
 
