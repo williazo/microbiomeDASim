@@ -8,8 +8,241 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo=TRUE)
 ```
 
-## Simulating Longitudinal Differential Abundance for Microbiome Data
+## Introduction
+
+In our analyses we want to try and simulate longitudinal differential abundance
+for microbiome normalized counts generated from 16S rRNA sequencing in order to
+compare different methodologies for estimating this differential abundance. 
+Simulating microbiome data presents a variety of different challenges based both
+on biological and technical challenges. 
+
+These challenges include:
+
++ Non-negative restriction
++ Presence of Missing Data/High Number of Zero Reads
++ Low Number of Repeated Measurements
++ Small Number of Subjects
+
+For our initial simulation design, we are attempting to address many of these 
+challanges by simulating data across a variety of different parameter scenarios 
+where each element of the challenges listed above can be investigated. Since 
+many of the methods when analyzing microbiome data involve normalization 
+procedures and the central limit theory allows us to think about the normal 
+distribution as an asymptotic ideal, we will treat the Multivariate Normal 
+Distribution as our best case scenario for simulation purposes.
+
+
+## Statistical Methodology
+Assume that we have data generated from the following distribution,
+$$\mathbf{Y}\sim N(\mathbf{\mu}, \mathbf{\Sigma})$$
+
+where
+$$\mathbf{Y}=\begin{pmatrix}
+\mathbf{Y}_{1}^{T} \\
+\mathbf{Y}_{2}^{T} \\
+\vdots \\
+\mathbf{Y}_{n}^{T}
+\end{pmatrix}=\begin{pmatrix}
+Y_{11} \\
+Y_{12} \\
+\vdots \\
+Y_{1q_{1}}\\
+Y_{21} \\
+\vdots \\
+Y_{2q_{2}}\\
+\vdots \\
+Y_{nq_{n}}
+\end{pmatrix}$$ with $Y_{ij}$ representing the $i^{th}$ patient at the $j^{th}$ 
+timepoint where each patient has $q_{i}$ repeated measurements with
+$i\in\{1,\dots,n\}$ and $j\in\{1,\dots,q_{i}\}$. We define the total number of 
+observations as $N=\sum_{i=1}^{n}q_{i}$. Therefore in our original assumption 
+defined above we can explicitly define the dimension of our objects as
+
+$$
+\mathbf{Y}_{N\times 1}\sim N_{N}(\mathbf{\mu}_{N\times 1},
+\mathbf{\Sigma}_{N\times N})
+$$
+
+In our current simulations we choose to keep the number of repeated measurements
+constant, i.e., $q_{i}=q \ \forall \ i\in\{1,\dots,n\}$. This means that the 
+total number of obseravtions simplifies to the expression $N=qn$. However, we 
+will vary the value of $q$ across the simulations to simulate data generated 
+from a study with a small ($q=3$), medium ($q=6$), or large ($q=12$) number of 
+repeated observations. Currently most studies with microbiome data collected 
+fall closest to the small case, but there are a few publically available 
+datasets that contain a large number of repeated observations for each 
+individual. For simplicity in the remaining description of the methodology 
+we will assume constant number of repeated observations.
+
+Without loss of generality we can split the total patients ($n$) into two 
+groups, control ($n_{0}$) vs ($n_{1}$), with the first $n_{0}$ patients 
+representing the control patients and the remaining $n-n_{0}$ representing the 
+treatment. Partitioning our observations in this way allows us to also partition
+the mean vector as $\mathbf{\mu}=(\mathbf{\mu}_{0}, \mathbf{\mu}_{1})$. In our 
+current simulation shown below we assume that the mean for the control group is 
+constant $\mu_{0}\mathbf{1}_{n_{0}\times 1}$, but we allow our mean vector for 
+the treatment group to vary depending on time $\mu_{1ij}(t)=\mu_{0} + f(t_{j})$ 
+for $i=1,\dots, n_{1}$ and $j=1,\dots,q$. In our simulation we will choose a 
+parametric form for the function $f(t_{j})$ primarly from the polynomial family 
+where 
+$$
+f(t_{j})=\beta_{0}+\beta_{1}t_{j}+\beta_{2}t_{j}^{2}+\dots+\beta_{p}t_{j}^{p}
+$$
+for a $p$ dimensional polynomial. For instance, to define a linear polynomial we
+would have 
+$$f(t_{j})=\beta_{0}+\beta_{1}t_{j}$$
+where $\beta_{1}>0$ for an increasing linear trend and $\beta_{1}<0$ for a 
+decreasing linear trend. For a list of available functional forms currently 
+implemented and the expected form of the input see documentation for
+`microbiomeDASim::mean_trend`.
+
+For the covariance matrix, we want to encode our longitudinal dependencies so 
+that observations within an individual are correlated, i.e.,
+$\text{Cor}(Y_{ij}, Y_{ij'})\ne0$, but that observations between individuals 
+are independent, i.e., 
+$\text{Cor}(Y_{ij}, Y_{i'j})=0 \ \forall i\ne i' \ \text{and} \ j$. 
+To accomplish this we define the matrix $\mathbf{\Sigma}_{N\times N}$ as 
+$\mathbf{\Sigma}=\text{bdiag}(\mathbf{\Sigma}_{1},\dots,\mathbf{\Sigma}_{n})$,
+where each $\mathbf{\Sigma}_{i}$ is a $q\times q$ matrix a specific longitudinal
+structure.
+
+For instance if we want to specify an autoregressive correlation structure for 
+individual $i$ we could define their covariance matrix as
+$$\mathbf{\Sigma}_{i}=\sigma^{2}\begin{bmatrix}
+1 & \rho & \rho^{2} & \cdots & \rho^{|1 - q|} \\
+\rho & 1 & \rho & \cdots & \rho^{|2-q|} \\
+\rho^{2} & \rho & 1 & \cdots & \\
+\vdots &  & & \ddots & \vdots \\
+\rho^{|q-1|} & \rho^{|q-2|} & \cdots & \cdots & 1
+\end{bmatrix}$$
+In this case we are using the first order autoregressive definition and 
+therefore will refer to this as "ar1".
+
+Alternatively, for the compound correlation structure for an individual $i'$ we
+could define the covariance matrix as
+$$\mathbf{\Sigma}_{i'}=\sigma^{2}\begin{bmatrix}
+1 & \rho & \rho & \cdots & \rho \\
+\rho & 1 & \rho & \cdots & \rho \\
+\rho & \rho & 1 & \cdots & \\
+\vdots &  & & \ddots & \vdots \\
+\rho & \rho & \cdots & \cdots & 1
+\end{bmatrix}$$
+
+Finally, the independent correlation structure for an individual $i''$ would be 
+defined as
+$$\mathbf{\Sigma}_{i''}=\sigma^{2}\begin{bmatrix}
+1 & 0 & 0 & \cdots & 0 \\
+0 & 1 & 0 & \cdots & 0 \\
+0 & 0 & 1 & \cdots & \\
+\vdots &  & & \ddots & \vdots \\
+0 & 0 & \cdots & \cdots & 1
+\end{bmatrix}$$
+
+#### Trivial Example
+We can construct a trivial example where $n=2$ ($n_0=1$ and $n_{1}=1$) 
+and $q=2$, an ar1 correlation structure where $\rho=0.8$, $sigma=1$, a linear 
+functional form with $\mathbf{\beta}=(0, 1)^{T}$, control mean is constant at
+$\mu_{0}=2$ and $t=(1, 2)$. 
+$$Y\sim\text{N}_{4}\begin{pmatrix}
+\begin{pmatrix}
+\mu_{0} \\
+\mu_{0} \\
+\mu_{0} +  \beta_0 + \beta_1\times t_{1}\\
+\mu_{0} +  \beta_0 + \beta_1\times t_{2}
+\end{pmatrix},\sigma^{2}
+\begin{pmatrix}
+1 & \rho & 0 & 0 \\
+\rho & 1 & 0 & 0 \\
+0 & 0 & 1 & \rho \\
+0 & 0 & \rho & 1
+\end{pmatrix}
+\end{pmatrix}=
+\text{N}_{4}\begin{pmatrix}
+\begin{pmatrix}
+2 \\
+2 \\
+3 \\
+4
+\end{pmatrix},
+\begin{pmatrix}
+1 & 0.8 & 0 & 0 \\
+0.8 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0.8 \\
+0 & 0 & 0.8 & 1
+\end{pmatrix}
+\end{pmatrix}
+$$
+
+Below we show how to generate data in the package `microbiomeDASim` 
+with these specifications.
+
+```{r, warning=FALSE, message=FALSE}
+devtools::install_github("williazo/microbiomeDASim")
+require(microbiomeDASim)
+```
+
+We can now look at sample data generated for our trivial example,
+
+```{r, fig.align='center', fig.height=4, fig.width=6}
+#Trivial example described above
+triv_ex <- mvrnorm_sim(n_control=10, n_treat=10, control_mean=2, sigma=1,
+            num_timepoints=2, rho=0.8, corr_str="ar1",
+            func_form="linear", beta= c(0, 1), missing_pct=0,
+            missing_per_subject=0, dis_plot=TRUE)
+head(triv_ex$df)
+triv_ex$Sigma[seq_len(5), seq_len(5)]
+```
+
+Note that there are a variety of flexible choices for the the functional 
+form of the trend:
+
++ Linear
++ Quadratic
++ Cubic
++ "M"/"W" (Oscillating Trends)
++ L_up/L_down (Hockey Stick Trends)
+
+Below we show an example using a Hockey Stick trend where we graph the true 
+functional form, and then simulate data with this trend.
+
+```{r, fig.align='center', fig.height=4, fig.width=6}
+true_mean <- mean_trend(timepoints=1:10, form="L_up", beta=0.5, IP=5,
+                        plot_trend=TRUE)
+hockey_sim <- mvrnorm_sim(n_control=10, n_treat=10, control_mean=2, sigma=1,
+                            num_timepoints=10, rho=0.8, corr_str="ar1",
+                            func_form="L_up", beta= 0.5, IP=5, missing_pct=0,
+                            missing_per_subject=0, dis_plot=TRUE)
+```
+
+The `mvrnorm_sim` method generates a single feature with a specified 
+longitudinal differential abundance pattern. However, we may want to simulate a
+microboime environment with multiple features where certain features have
+differential abundance while others do not. 
+
+To address this we can use the function `gen_microbiome`, which specifies the 
+number of features and the number of differentiall abundant features. All 
+features selected to have differential abundance will have the same type of 
+functional form.
+
+```{r}
+bug_gen <- gen_norm_microbiome(features=6, diff_abun_features=3, n_control=30,
+                                n_treat=20, control_mean=2, sigma=2,
+                                num_timepoints=4, rho=0.9, corr_str="compound",
+                                func_form="M", beta=c(4, 3), IP=c(2, 3.3, 6),
+                                missing_pct=0.2, missing_per_subject=2,
+                                miss_val=0)
+head(bug_gen$bug_feat)
+bug_gen$Y[, 1:5]
+names(bug_gen)
+```
+Note that we now have two objects returned in this function. 
+
++ `Y` is our observed feature matrix with rows representing features and 
+columns indicating our repeated samples
++ `bug_feat` identifies the subject ID, time, group (Control vs. Treatment) and 
+corresponding Sample ID from the columns of `Y`.
+
 
