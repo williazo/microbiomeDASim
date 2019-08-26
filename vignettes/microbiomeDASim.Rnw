@@ -197,10 +197,9 @@ $$Y\sim\text{N}_{4}\begin{pmatrix}
 $$
 
 Below we show how to generate data in the package \texttt{microbiomeDASim}
-with these specifications. First we load the package.
-<<pkg_load, warning=FALSE, message=FALSE, eval=FALSE>>=
-devtools::install_github("williazo/microbiomeDASim")
-require(microbiomeDASim)
+with these specifications.
+<<pkg_load,warning=FALSE,message=FALSE>>=
+library(microbiomeDASim)
 @
 
 Next, we can now look at sample data generated for our trivial example,
