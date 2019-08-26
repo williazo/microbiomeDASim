@@ -1,17 +1,8 @@
 %\VignetteIndexEntry{microbiomeDASim}
 %\VignetteEngine{knitr::knitr}
 \documentclass[a4paper,11pt]{article}
-\usepackage{url}
-\usepackage{afterpage}
-\usepackage{hyperref}
-\usepackage{geometry}
-\usepackage{cite}
-\geometry{hmargin=2.5cm, vmargin=2.5cm}
-\usepackage{graphicx}
-\usepackage{courier}
-\bibliographystyle{unsrt}
 \usepackage{amsmath}
-\usepackage{multirow, array}
+\usepackage{hyperref}
 
 \begin{document}
 <<include=FALSE>>=
@@ -207,7 +198,7 @@ $$
 
 Below we show how to generate data in the package \texttt{microbiomeDASim}
 with these specifications. First we load the package.
-<<pkg_load, warning=FALSE, message=FALSE>>=
+<<pkg_load, warning=FALSE, message=FALSE, eval=FALSE>>=
 devtools::install_github("williazo/microbiomeDASim")
 require(microbiomeDASim)
 @
