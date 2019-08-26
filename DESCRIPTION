@@ -1,8 +1,8 @@
 Package: microbiomeDASim
 Type: Package
 Title: Microbiome Differential Abundance Simulation 
-Version: 0.99.8
-Author: Justin Williams
+Version: 0.99.0
+Author: Justin Williams, Hector Corrada Bravo, Jennifer Tom, Joseph Nathaniel Paulson
 Maintainer: Justin Williams <williazo@ucla.edu>
 Description: A toolkit for simulating differential microbiome data designed for
     longitudinal analyses. Several functional forms may be specified for the
@@ -28,8 +28,11 @@ RoxygenNote: 6.1.1
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    devtools
 VignetteBuilder: knitr
 biocViews: Microbiome,
     Visualization,
     Software
+BugReports: https://github.com/williazo/microbiomeDASim/issues
+URL: https://github.com/williazo/microbiomeDASim
