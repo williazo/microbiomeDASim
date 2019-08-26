@@ -5,7 +5,7 @@
 \title{Generate Multivariate Random Normal Longitudinal Data}
 \usage{
 mvrnorm_corr_gen(n, obs, mu, sigma, rho, corr_str = c("ar1", "compound",
-  "ind"), zero_trunc = TRUE)
+    "ind"), zero_trunc = TRUE)
 }
 \arguments{
 \item{n}{integer scalar representing the total number of individuals}

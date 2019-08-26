@@ -5,7 +5,7 @@
 \title{Generating the final combined bug output}
 \usage{
 final_output_gen(no_diff_feat, diff_abun_features, diff_Y, null_Y,
-  diff_bugs, nodiff_bugs, final_output = NULL)
+    diff_bugs, nodiff_bugs, final_output = NULL)
 }
 \arguments{
 \item{no_diff_feat}{number of non differentially abundant features}

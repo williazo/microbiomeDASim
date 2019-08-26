@@ -5,7 +5,7 @@
 \title{Function for Generating Various Longitudinal Mean Trends}
 \usage{
 mean_trend(timepoints, form = c("linear", "quadratic", "cubic", "M", "W",
-  "L_up", "L_down"), beta, IP = NULL, plot_trend = FALSE)
+    "L_up", "L_down"), beta, IP = NULL, plot_trend = FALSE)
 }
 \arguments{
 \item{timepoints}{numeric vector specifying the points to fit the functional
@@ -120,19 +120,19 @@ be ignored.}
 \examples{
 #Quadratic Form
 mean_trend(timepoints=seq(0, 6, length.out=20),
-               form='quadratic', beta=1/4 * c(-1, 3, -0.5), plot_trend=TRUE)
+                form='quadratic', beta=1/4 * c(-1, 3, -0.5), plot_trend=TRUE)
 #M Form
 mean_trend(timepoints=seq(0, 10,length.out=100), form='M',
-               beta=c(0, 5), IP=10 * c(1/4, 2/4, 3/4), plot_trend=TRUE)
+                beta=c(0, 5), IP=10 * c(1/4, 2/4, 3/4), plot_trend=TRUE)
 #in this case the IP points are selected so that peaks are evenly
 #distributed but this does not have to be true in general
 
 #L_up Form
 mean_trend(timepoints=seq(0, 10, length.out=100), form='L_up',
-           beta=1, IP=5, plot_trend=TRUE)
+            beta=1, IP=5, plot_trend=TRUE)
 
 #L_down Form
 mean_trend(timepoints=seq(0, 10,length.out=100), form='L_down',
-           beta=c(4, -0.5), IP=NULL, plot_trend=TRUE)
+            beta=c(4, -0.5), IP=NULL, plot_trend=TRUE)
 
 }

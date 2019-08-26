@@ -5,10 +5,10 @@
 \title{Simulate Microbiome Longitudinal Data from Multivariate Random Normal}
 \usage{
 mvrnorm_sim(n_control, n_treat, control_mean, sigma, num_timepoints, rho,
-  corr_str = c("ar1", "compound", "ind"), func_form = c("linear",
-  "quadratic", "cubic", "M", "W", "L_up", "L_down"), beta, IP = NULL,
-  missing_pct, missing_per_subject, miss_val = NA, dis_plot = FALSE,
-  plot_trend = FALSE, zero_trunc = TRUE)
+    corr_str = c("ar1", "compound", "ind"), func_form = c("linear",
+    "quadratic", "cubic", "M", "W", "L_up", "L_down"), beta, IP = NULL,
+    missing_pct, missing_per_subject, miss_val = NA, dis_plot = FALSE,
+    plot_trend = FALSE, zero_trunc = TRUE)
 }
 \arguments{
 \item{n_control}{integer value specifying the number of control individuals}
@@ -92,11 +92,11 @@ specified the method as mvrnorm.
 \examples{
 num_subjects_per_group <- 20
 sim_obj <- mvrnorm_sim(n_control=num_subjects_per_group,
-                       n_treat=num_subjects_per_group,
-                       control_mean=5, sigma=1, num_timepoints=5,
-                       rho=0.95, corr_str='ar1', func_form='linear',
-                       beta=c(0, 0.25),
-                       missing_pct=0.6, missing_per_subject=2)
+                        n_treat=num_subjects_per_group,
+                        control_mean=5, sigma=1, num_timepoints=5,
+                        rho=0.95, corr_str='ar1', func_form='linear',
+                        beta=c(0, 0.25),
+                        missing_pct=0.6, missing_per_subject=2)
 #checking the output
 head(sim_obj$df)
 
