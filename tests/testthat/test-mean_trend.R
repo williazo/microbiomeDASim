@@ -12,10 +12,10 @@ test_that("functional form misspecification", {
 
     M_test <- mean_trend(timepoints=seq(0, 10, length.out=20),
                          form="M", beta=c(0, 0.5), IP=c(3, 5, 8),
-                         plot_trend=TRUE)
+                         plot_trend=FALSE)
     W_test <- mean_trend(timepoints=seq(0, 10, length.out=20),
                           form="W", beta=c(0, -0.1), IP=c(3, 5, 8),
-                          plot_trend=TRUE)
+                          plot_trend=FALSE)
 
     expect_equal(length(M_test), 3)
     expect_equal(names(M_test), c("form", "trend", "beta"))
@@ -30,9 +30,9 @@ test_that("functional form misspecification", {
 
     expect_error(mean_trend(timepoints = seq(1, 3,length.out = 100),
                               form = "L_up", beta = 1, IP = c(2, 3, 5),
-                              plot_trend = TRUE), "IP must be single value")
+                              plot_trend = FALSE), "IP must be single value")
 
     expect_error(mean_trend(timepoints = seq(1, 10,length.out = 100), form = "L_down", beta = c(4, -0.1),
-                            IP = NULL, plot_trend = TRUE))
+                            IP = NULL, plot_trend = FALSE))
 
 })
