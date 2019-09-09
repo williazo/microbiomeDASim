@@ -14,10 +14,12 @@ install.packages("devtools")
 devtools::install_github("williazo/microbiomeDASim")
 ```
 
-## Simulation Examples
+## Examples
 
-Interactive examples for how to simulate data from a multivariate normal
-distribution are available in the `SIMULATION` directory.
+An interactive examples for how to simulate data from a multivariate
+normal distribution and fit a trend line using
+[metagenomeSeq::fitTimeSeries](https://bioconductor.org/packages/release/bioc/html/metagenomeSeq.html)
+are available in the `inst/scripts` directory.
 
 To run these interactive examples see instructions for installing a
 Jupyter Notebook
@@ -27,6 +29,7 @@ for Jupyter NB](https://github.com/IRkernel/IRkernel).
 
 After installing Jupyter and the appopriate kernel you can access an
 interactive simulation session of `microbiomeDASim` using
-[mvrnorm\_demo.ipynb](https://github.com/williazo/microbiomeDASim/blob/master/SIMULATION/mvrnorm_demo.ipynb)
-located in the SIMULATIONS tab and which contains details on the
-methodology for setting up the simulations.
+[mvrnorm\_demo.ipynb](https://github.com/williazo/microbiomeDASim/blob/master/inst/script/mvrnorm_demo.ipynb).
+This notebook contains details on the methodology for setting up the
+simulations and outlines several of the options available for simulating
+longidutinal differential abundance.
