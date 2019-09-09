@@ -161,6 +161,8 @@ mean_trend <- function(timepoints, form=c("linear", "quadratic", "cubic",
 #' @param timepoints numeric vector specifying the points to fit the functional
 #'  trend.
 #'
+#'  @keywords internal
+#'
 #' @return
 #' Nothing returned unless an error is returned.
 form_beta_check <- function(form, beta, IP, timepoints){
@@ -213,6 +215,8 @@ form_beta_check <- function(form, beta, IP, timepoints){
 #' @param timepoints numeric vector specifying the points to fit the functional
 #'  trend.
 #'
+#' @keywords internal
+#'
 #' @return
 #' Numeric matrix with values that will be used to generate functional trends
 
@@ -262,6 +266,8 @@ mean_trend_design_mat <- function(form, beta, IP, timepoints){
 #' @param timepoints numeric vector specifying the points to fit the functional
 #'  trend.
 #'
+#'  @keywords internal
+#'
 #' @return
 #' Vector with beta values used to create mean_tend
 #'
@@ -292,6 +298,8 @@ mean_trend_beta_vec <- function(form, beta, IP, timepoints){
 #' \code{\link{mean_trend}} for explanation for each form
 #' @param timepoints numeric vector specifying the points to fit the functional
 #'  trend.
+#'
+#' @keywords internal
 #'
 #' @return
 #' Updated inflection point vector

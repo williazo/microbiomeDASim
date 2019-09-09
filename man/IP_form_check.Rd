@@ -25,3 +25,4 @@ Updated inflection point vector
 \description{
 Inflection point check for \code{mean_trend}
 }
+\keyword{internal}

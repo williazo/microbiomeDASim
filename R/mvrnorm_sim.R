@@ -244,6 +244,8 @@ mvrnorm_corr_gen <- function(n, obs, mu, sigma, rho,
 #' @param n an integer value specifying the desired vector length if a scalar
 #'  is provided
 #'
+#' @keywords internal
+#'
 #' @return
 #' return a vector that has same length as specified n
 vector_scalar_check <- function(input, n) {
@@ -268,6 +270,8 @@ vector_scalar_check <- function(input, n) {
 #' @importFrom mvtnorm pmvnorm
 #' @importFrom tmvtnorm rtmvnorm
 #' @importFrom MASS mvrnorm
+#'
+#' @keywords internal
 #'
 #' @return
 #' Potentially truncated outcome vector Y
@@ -299,6 +303,8 @@ trunc_bugs <- function(Y, N, Mu, Sigma, zero_trunc){
 #' @param corr_str the type of correlatin structure chosen. options currently
 #' available include "ar1", "compound", and "ind"
 #' @param rho the correlation coefficient for non-independent structures
+#'
+#' @keywords internal
 #'
 #' @return
 #' Return the covariance matrix V as a list

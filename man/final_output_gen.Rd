@@ -29,3 +29,4 @@ final output list with the OTU table and corresponding bug feature data.frame
 \description{
 Generating the final combined bug output
 }
+\keyword{internal}

@@ -20,3 +20,4 @@ differentially abundant features are specified
 \description{
 Checking that features are specified appopriately
 }
+\keyword{internal}

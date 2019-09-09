@@ -25,3 +25,4 @@ of the proper length.
 Note that \code{n} refers to the number of individuals in the
 \code{\link[microbiomeDASim]{mvrnorm_corr_gen}}
 }
+\keyword{internal}

@@ -22,3 +22,4 @@ Return the covariance matrix V as a list
 \description{
 Generating the longitudinal correlation matrix for repeated observations
 }
+\keyword{internal}

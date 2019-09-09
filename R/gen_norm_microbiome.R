@@ -108,6 +108,8 @@ gen_norm_microbiome <- function(features=10, diff_abun_features=5,
 #' @param diff_abun_features Number of features to simulate with differentially
 #' abundant pattern. Must be between zero and number of features specified
 #'
+#' @keywords internal
+#'
 #' @return
 #' Potential warning message if no differentially abundant features or all
 #' differentially abundant features are specified
@@ -139,6 +141,8 @@ gen_microbiome_norm_feature_check <- function(features, diff_abun_features){
 #' @param nodiff_bugs sample information for non differentially abundant
 #' features
 #' @param final_output final object that will store the simulated data
+#'
+#' @keywords internal
 #'
 #' @return
 #' final output list with the OTU table and corresponding bug feature data.frame

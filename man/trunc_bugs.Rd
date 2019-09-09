@@ -25,3 +25,4 @@ Potentially truncated outcome vector Y
 \description{
 Function for inducing truncation of outcome
 }
+\keyword{internal}

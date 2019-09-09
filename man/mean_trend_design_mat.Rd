@@ -26,3 +26,4 @@ Numeric matrix with values that will be used to generate functional trends
 By taking in the user specified parameters, we can return a design matrix
 to use when creating the differential longitudinal abundance.
 }
+\keyword{internal}
