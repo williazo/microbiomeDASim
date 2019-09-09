@@ -14,7 +14,7 @@ opts_chunk$set(concordance=TRUE,tidy=TRUE)
 Differential Abundance}}}
 \author{Justin Williams, Hector Corrada Bravo, Jennifer Tom, Joseph Nathaniel
     Paulson}
-\date{Modified: August 26, 2019. Compiled: \today}
+\date{Modified: September 9, 2019. Compiled: \today}
 \maketitle
 \tableofcontents
 
@@ -27,6 +27,41 @@ options(warn=-1)
 @
 
 \section{Introduction}
+With an increasing emphasis on understanding the dynamics of microbial
+communities in various settings, longitudinal sampling studies are underway.
+Whole metagenomic shotgun sequencing and marker-gene survey studies have unique
+technical artifacts that drive novel statistical methodological development for
+estimating time intervals of differential abundance. In designing a study and
+the frequency of collection prior to a study, one may wish to model the ability
+to detect an effect, e.g., there may be issues with respect to cost, ease of
+access, etc. Additionally, while every study is unique, it is possible that in
+certain scenarios one statistical framework may be more appropriate than
+another.
+
+Here, we present a simulation paradigm in a R software package termed
+\texttt{microbiomeDASim}. This package allows investigators to simulate
+longitudinal differential abundance for single features, \texttt{mvrnorm\_sim},
+or a community with multiple features, \texttt{gen\_norm\_microbiome}. The
+functions allow the user to specify a variety of known functional forms
+(e.g, linear, quadratic, oscillating, hockey stick) along with
+flexible parameters to control desired signal to noise ratio. Different
+longitudinal correlation structures are available including AR(1), compound,
+and independent to account for expected within individual correlation. Comparing
+estimation methods or designing a potential longidutinal investigation for
+microbiome sequencing data using \texttt{microbiomeDASim} provides accurate and
+reproducible results.
+
+\section{Installation}
+To install \texttt{microbiomeDASim} from \textit{Bioconductor} use the code
+below:
+<<pkg_install,eval=FALSE>>=
+if(!requireNamespace("BiocManager", quietly = TRUE)){
+   install.packages("BiocManager")
+}
+BiocManager::install("microbiomeDASim")
+@
+
+\section{Motivation}
 In our analyses we want to try and simulate longitudinal differential abundance
 for microbiome normalized counts generated from 16S rRNA sequencing in order to
 compare different methodologies for estimating this differential abundance.
@@ -266,4 +301,8 @@ Note that we now have two objects returned in this function.
     \texttt{Y}.
 \end{itemize}
 
+\section{Session Info}
+<<session_info>>=
+sessionInfo()
+@
 \end{document}
