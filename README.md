@@ -1,17 +1,41 @@
-microbiomeDASim: Microbiome Differential Abundance Simulation
+Microbiome Differential Abundance Simulation
 ================
+
+[![Bioc
+build](http://bioconductor.org/shields/build/release/bioc/microbiomeDASim.svg)](http://bioconductor.org/checkResults/release/bioc-LATEST/microbiomeDASim/)
+[![Bioc
+time](http://bioconductor.org/shields/years-in-bioc/microbiomeDASim.svg)](https://bioconductor.org/packages/microbiomeDASim)
+[![Bioc
+downloads](http://bioconductor.org/shields/downloads/release/microbiomeDASim.svg)](http://bioconductor.org/packages/stats/bioc/microbiomeDASim/)
 
 This package is developed to simulate microbiome data for longitudinal
 differential abundance analyses. Microbiome data have a variety of
-features that make typical simulation methods inappropriate.
+features that make typical simulation methods inappropriate. For an
+in-depth description of the types of problems this simulation package is
+designed to solve, plus basics of the functionality please refer to the
+F1000 manuscript
+[f1000research.20660.1](https://doi.org/10.12688/f1000research.20660.1).
 
 ## Installation
 
-To install microbimeDASim use the following R command below
+To install the `microbiomeDASim` package the latest release version is
+available from Bioconductor
 
 ``` r
-install.packages("devtools")
-devtools::install_github("williazo/microbiomeDASim")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("microbiomeDASim")
+```
+
+Alternatively to use the latest development version from Bioconductor
+use the following commands
+
+``` r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("microbiomeDASim", version="devel")
 ```
 
 ## Examples
@@ -21,15 +45,5 @@ normal distribution and fit a trend line using
 [metagenomeSeq::fitTimeSeries](https://bioconductor.org/packages/release/bioc/html/metagenomeSeq.html)
 are available in the `inst/scripts` directory.
 
-To run these interactive examples see instructions for installing a
-Jupyter Notebook
-[here](https://jupyter.readthedocs.io/en/latest/install.html), and to
-add an R kernel for the notebook see the following reference: [R kernel
-for Jupyter NB](https://github.com/IRkernel/IRkernel).
-
-After installing Jupyter and the appopriate kernel you can access an
-interactive simulation session of `microbiomeDASim` using
-[mvrnorm\_demo.ipynb](https://github.com/williazo/microbiomeDASim/blob/master/inst/script/mvrnorm_demo.ipynb).
-This notebook contains details on the methodology for setting up the
-simulations and outlines several of the options available for simulating
-longidutinal differential abundance.
+This notebook can be run interactively using Google Collab by clicking
+the “Open in Colab” marker at the top of the notebook.
