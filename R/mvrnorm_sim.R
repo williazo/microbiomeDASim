@@ -11,8 +11,13 @@
 #'  value.
 #' @param sigma numeric value specifying the global population standard
 #'  deviation for both control and treated individuals.
-#' @param num_timepoints integer value specifying the number of timepoints per
-#'  subject.
+#' @param num_timepoints either an integer value specifying the number of
+#'  timepoints per subject or a vector of timepoints for each subject. If
+#'  supplying a vector the lenght of the vector must equal the total number of
+#'  subjects.
+#' @param t_interval numeric vector of length two specifying the interval of
+#' time from which to draw observatoins \[t_1, t_q\]. Assumed to be equally
+#' spaced over the interval unless \code{asynch_time} is set to TRUE.
 #' @param rho value for the correlation parameter. must be between \[0, 1\].
 #'  see \code{\link[microbiomeDASim]{mvrnorm_corr_gen}} for details.
 #' @param corr_str correlation structure selected. see
@@ -41,6 +46,8 @@
 #' \code{\link[microbiomeDASim]{mean_trend}} for details.
 #' @param zero_trunc logical indicator designating whether simulated outcomes
 #' should be zero truncated. default is set to TRUE
+#' @param asynch_time logical indicator designed to randomly sample timepoints
+#' over a specified interval if set to TRUE. default is FALSE.
 #'
 #' @importFrom graphics plot
 #'
@@ -49,8 +56,8 @@
 #' sim_obj <- mvrnorm_sim(n_control=num_subjects_per_group,
 #'                        n_treat=num_subjects_per_group,
 #'                        control_mean=5, sigma=1, num_timepoints=5,
-#'                        rho=0.95, corr_str='ar1', func_form='linear',
-#'                        beta=c(0, 0.25),
+#'                        t_interval=c(0, 4), rho=0.95, corr_str='ar1',
+#'                        func_form='linear', beta=c(0, 0.25),
 #'                        missing_pct=0.6, missing_per_subject=2)
 #' #checking the output
 #' head(sim_obj$df)
@@ -86,26 +93,25 @@
 #'
 #' @export
 mvrnorm_sim <- function(n_control, n_treat, control_mean, sigma, num_timepoints,
-                        rho, corr_str=c("ar1", "compound", "ind"),
+                        t_interval, rho, corr_str=c("ar1", "compound", "ind"),
                         func_form=c("linear", "quadratic", "cubic", "M", "W",
                                 "L_up", "L_down"), beta, IP=NULL, missing_pct,
                         missing_per_subject, miss_val=NA, dis_plot=FALSE,
-                        plot_trend=FALSE, zero_trunc=TRUE) {
+                        plot_trend=FALSE, zero_trunc=TRUE, asynch_time=FALSE) {
     corr_str <- match.arg(corr_str)
     func_form <- match.arg(func_form)
-    if (missing_per_subject > (num_timepoints - 1)) {
-        stop("Value of missing_per_subject > than num_timepoints-1.",
-                call.=FALSE)
-    }
     n <- sum(n_control, n_treat)
-    trt_mean <- mean_trend(timepoints=seq_len(num_timepoints), form=func_form,
+    timepoints <- timepoint_process(num_timepoints, t_interval, n, asynch_time,
+                                    missing_per_subject)
+    N_c <- sum(timepoints$num_timepoints[seq_len(n_control)])
+    t_tx <- timepoints$t[-seq_len(N_c)]
+    trt_mean <- mean_trend(timepoints=t_tx, form=func_form,
                             beta=beta, IP=IP, plot_trend=plot_trend)
     treat_mean_mu <- control_mean + trt_mean$trend$mu
-    mu_tot <- c(rep(control_mean, n_control * num_timepoints),
-                rep(treat_mean_mu, n_treat))
-    rand_dt <- mvrnorm_corr_gen(n=n, obs=num_timepoints, mu=mu_tot, sigma=sigma,
-                                rho=rho, corr_str=corr_str,
-                                zero_trunc=zero_trunc)
+    mu_tot <- c(rep(control_mean, N_c), treat_mean_mu)
+    rand_dt <- mvrnorm_corr_gen(n=n, obs=timepoints$num_timepoints,
+                                t=timepoints$t, mu=mu_tot, sigma=sigma, rho=rho,
+                                corr_str=corr_str, zero_trunc=zero_trunc)
     rand_dt$df$group <- ifelse(rand_dt$df$ID <= n_control, "Control",
                                 "Treatment")
     missing_ids <- sample(seq_len(n), ceiling(n * missing_pct))
@@ -136,8 +142,84 @@ mvrnorm_sim <- function(n_control, n_treat, control_mean, sigma, num_timepoints,
     return(rand_dt)
 }
 
-
-
+#' Function for processing and checking the inputed timepoints
+#'
+#' To allow for increased flexibility the user may specify the number of
+#' timepoints as either a single value or separately for each individual. There
+#' is also an added option about whether to draw the timepoints evenly spaced
+#' across the interval of interest or whether to randomly draw them.
+#'
+#' @param num_timepoints either an integer value specifying the number of
+#'  timepoints per subject or a vector of timepoints for each subject. If
+#'  supplying a vector the lenght of the vector must equal the total number of
+#'  subjects.
+#' @param t_interval numeric vector of length two specifying the interval of
+#' time from which to draw observatoins \[t_1, t_q\]. Assumed to be equally
+#' spaced over the interval unless \code{asynch_time} is set to TRUE.
+#' @param n numeric value representing the total number of obserations
+#' @param asynch_time logical indicator designed to randomly sample timepoints
+#' over a specified interval if set to TRUE.
+#'
+#' @details
+#' It is assummed that there is a known time interval of interest over which
+#' samples will be collected longitudinally on subjects. This interval is
+#' specified as \[t_1, t_q\]. All subjects are assumed to have baseline
+#' observations, i.e., t_1.
+#'
+#' Over this study interval each subject can have a potentially different number
+#' of measurements taken. In the most simple case we assume that all subjects
+#' will have the same number of measurements and can specify
+#' \code{num_timepoints} as a single scalar value. Otherwise, we must specify
+#' how many timepoints will be collected for each individual. In this latter
+#' case \code{num_timepoints} must have the same length as the number of
+#' subjects.
+#'
+#' Finally, we can select whether we want the timepoints to be drawn at equal
+#' spaces over our study interal, or whether we want to randomly sample
+#' asynchronous timepoints. In the asynchronous case we randomly draw from a
+#' uniform distribution over the study interval with the restriction that the
+#' first observation must occur at t_1.
+#'
+#' @keywords internal
+timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
+                              missing_per_subject){
+    time_len <- length(num_timepoints)
+    if(time_len != 1 && time_len != n){
+        stop("length of timepoints misspecified", call.=FALSE)
+    }
+    if(time_len == 1){
+        num_timepoints <- rep(num_timepoints, n)
+    }
+     if(!any(unlist(lapply(c(num_timepoints, t_interval), is.numeric)))){
+        stop("num_timepoints and/or t_interval not numeric", call.=FALSE)
+    }
+    if(any(is.infinite(num_timepoints)) || any(num_timepoints<=0)){
+        stop("num_timepoints has infinite or non positive values", call.=FALSE)
+    }
+    if(any(missing_per_subject > (num_timepoints - 1))){
+        stop("Missing per subject greater than at least number of timepoints.",
+             call.=FALSE)
+    }
+    if(length(t_interval)!=2){
+        stop("time interval must be numeric vector of length 2", call.=FALSE)
+    }
+    if(any(is.infinite(t_interval))){
+        stop("time interval must be finite", call.=FALSE)
+    }
+    if(asynch_time==FALSE){
+        t <- lapply(num_timepoints, function(nt){
+            seq(from=t_interval[1], to=t_interval[2], length.out=nt)
+        })
+    }else{
+        t <- lapply(num_timepoints, function(nt){
+            t <- runif(nt-1, min=t_interval[1], max=t_interval[2])
+            t <- t[order(t)]
+            t <- c(0, t)
+        })
+    }
+    t <- unlist(t)
+    return(list(num_timepoints=num_timepoints, t=t))
+}
 
 #' Generate Multivariate Random Normal Longitudinal Data
 #'
@@ -150,6 +232,7 @@ mvrnorm_sim <- function(n_control, n_treat, control_mean, sigma, num_timepoints,
 #'   number of obsevations. If a vector, then the vector must have length equal
 #'    to \code{n} where each element specifies the number of observations for
 #'     the \eqn{i^{th}} individual.
+#' @param t vector corresponding to the timepoints for each individual.
 #' @param mu integer or vector specifying the mean value for individuals.
 #' If an integer then all indivdiuals are assummed to have the same mean.
 #' If a vector, then the vector must have length equal to \code{n} where each
@@ -189,7 +272,7 @@ mvrnorm_sim <- function(n_control, n_treat, control_mean, sigma, num_timepoints,
 #' \code{N} - total number of observations
 #'
 #' @export
-mvrnorm_corr_gen <- function(n, obs, mu, sigma, rho,
+mvrnorm_corr_gen <- function(n, obs, t, mu, sigma, rho,
                                 corr_str=c("ar1", "compound", "ind"),
                                 zero_trunc=TRUE) {
     if (!is.numeric(rho))
@@ -205,29 +288,16 @@ mvrnorm_corr_gen <- function(n, obs, mu, sigma, rho,
     if (corr_str == "ind" && is.null(rho) == FALSE) {
         warning("ignoring rho coefficient", call.=FALSE)
     }
-    obs <- vector_scalar_check(obs, n)
-    mu <- vector_scalar_check(mu, n)
-    sigma <- vector_scalar_check(sigma, n)
-    corr_str <- vector_scalar_check(corr_str, n)
-    rho <- vector_scalar_check(rho, n)
     N <- sum(obs)
-    if (length(mu) == n) {
-        Mu <- unlist(mapply(x=mu, y=obs, function(x, y) {
-            mu_i <- rep(x, y)
-            return(list(mu_i))
-        }))
-    } else if (length(mu) == N) {
-        Mu <- mu
-    } else {
-        stop("mu must be a scalar, vector of length n, or vector of length N",
-                call.=FALSE)
-    }
-    block_diag_list <- mapply(obs, sigma, corr_str, rho,FUN=sigma_corr_function)
+    s_df <- data.frame(time=t, id=rep(seq_len(n), obs))
+    id_split <- split(s_df, s_df$id)
+    block_diag_list <- lapply(id_split, function(s){
+        sigma_corr_function(t=s$time, sigma, corr_str,rho)
+        })
     Sigma <- bdiag(block_diag_list)
-    Y <- trunc_bugs(Y, N, Mu, Sigma, zero_trunc)
-    df <- data.frame(Y, ID=rep(seq_len(n), obs),
-                        time=unlist(lapply(obs, seq_len)))
-    return(list(df=df, Y=Y, Mu=Mu, Sigma=Sigma, N=N))
+    Y <- trunc_bugs(Y, N, Mu=mu, Sigma, zero_trunc)
+    df <- data.frame(Y, ID=s_df$id, time=s_df$time)
+    return(list(df=df, Y=Y, Mu=mu, Sigma=Sigma, N=N))
 }
 
 #' Checking input for scalar or vector valued
@@ -243,16 +313,20 @@ mvrnorm_corr_gen <- function(n, obs, mu, sigma, rho,
 #'  the length or replicate to the specified length
 #' @param n an integer value specifying the desired vector length if a scalar
 #'  is provided
+#' @param N an integer value specifying the total number of observations across
+#' individuals.
 #'
 #' @keywords internal
 #'
 #' @return
 #' return a vector that has same length as specified n
-vector_scalar_check <- function(input, n) {
+vector_scalar_check <- function(input, n, N) {
     if (length(input) == 1) {
-        output <- rep(input, n)
-    } else if (length(input) > 1) {
+        output <- rep(input, N)
+    } else if (length(input) == n | length(input) == N) {
         output <- input
+    } else{
+        stop("incorrect vector length", call.=FALSE)
     }
     return(output)
 }
@@ -298,7 +372,7 @@ trunc_bugs <- function(Y, N, Mu, Sigma, zero_trunc){
 
 #' Generating the longitudinal correlation matrix for repeated observations
 #'
-#' @param obs number of repeated observations per individual
+#' @param t timepoints for repeated observations
 #' @param sigma the standard deviation parameter for the covariance matrix
 #' @param corr_str the type of correlatin structure chosen. options currently
 #' available include "ar1", "compound", and "ind"
@@ -308,24 +382,24 @@ trunc_bugs <- function(Y, N, Mu, Sigma, zero_trunc){
 #'
 #' @return
 #' Return the covariance matrix V as a list
-sigma_corr_function <- function(obs, sigma, corr_str, rho){
+sigma_corr_function <- function(t, sigma, corr_str, rho){
     if (corr_str == "ar1") {
-        H <- abs(outer(seq_len(obs), seq_len(obs), "-"))
+        H <- abs(outer(t, t, "-"))
         V <- sigma * rho^H
         p <- nrow(V)
         pl <- seq_len(p)
         V[cbind(pl, pl)] <- V[cbind(pl, pl)] * sigma
     } else if (corr_str == "compound") {
-        H <- outer(rep(1, obs), rep(1, obs)) - diag(1, obs)
+        H <- outer(rep(1, length(t)), rep(1, length(t))) - diag(1, length(t))
         V <- sigma * rho^H
         p <- nrow(V)
         pl <- seq_len(p)
         V[cbind(pl, pl)] <- V[cbind(pl, pl)] * sigma
     } else if (corr_str == "ind") {
-        V <- sigma * diag(1, obs)
+        V <- sigma * diag(1, length(t))
         p <- nrow(V)
         pl <- seq_len(p)
         V[cbind(pl, pl)] <- V[cbind(pl, pl)] * sigma
     }
-    return(list(V))
+    return(V)
 }

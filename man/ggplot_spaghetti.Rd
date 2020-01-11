@@ -4,8 +4,15 @@
 \alias{ggplot_spaghetti}
 \title{Spaghetti Plots using \code{ggplot2}}
 \usage{
-ggplot_spaghetti(y, id, time, alpha = 0.2, method = "loess", jit = 0,
-  group = NULL)
+ggplot_spaghetti(
+  y,
+  id,
+  time,
+  alpha = 0.2,
+  method = "loess",
+  jit = 0,
+  group = NULL
+)
 }
 \arguments{
 \item{y}{This is the y-axis parameter to specify.

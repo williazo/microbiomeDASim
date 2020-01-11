@@ -13,6 +13,9 @@
 #'  deviation for both control and treated individuals.
 #' @param num_timepoints integer value specifying the number of timepoints per
 #'  subject.
+#' @param t_interval numeric vector of length two specifying the interval of
+#' time from which to draw observatoins \[t_1, t_q\]. Assumed to be equally
+#' spaced over the interval unless \code{asynch_time} is set to TRUE.
 #' @param rho value for the correlation parameter. must be between \[0, 1\].
 #'  see \code{\link[microbiomeDASim]{mvrnorm_corr_gen}} for details.
 #' @param corr_str correlation structure selected. see
@@ -41,6 +44,8 @@
 #' \code{\link[microbiomeDASim]{mean_trend}} for details.
 #' @param zero_trunc logical indicator designating whether simulated outcomes
 #' should be zero truncated. default is set to TRUE
+#' @param asynch_time logical indicator designed to randomly sample timepoints
+#' over a specified interval if set to TRUE. default is FALSE.
 #'
 #' @importFrom pbapply pblapply
 #'
@@ -53,29 +58,29 @@
 #' @examples
 #'gen_norm_microbiome(features = 5, diff_abun_features = 2,
 #'                n_control = 10, n_treat = 10, control_mean = 8, sigma = 1,
-#'                num_timepoints = 5, rho = 0.8, corr_str = "compound",
-#'                func_form = "linear", beta =  c(0, 1), missing_pct = 0.3,
-#'                missing_per_subject = 2)
+#'                num_timepoints = 5, t_inverval=c(0, 4), rho = 0.8,
+#'                corr_str = "compound", func_form = "linear", beta =  c(0, 1),
+#'                missing_pct = 0.3, missing_per_subject = 2)
 #'
 #' @export
 gen_norm_microbiome <- function(features=10, diff_abun_features=5,
                                 n_control, n_treat, control_mean,
-                                sigma, num_timepoints, rho,
+                                sigma, num_timepoints, t_interval, rho,
                                 corr_str=c("ar1", "compound", "ind"),
                                 func_form=c("linear", "quadratic", "cubic",
                                             "M", "W", "L_up", "L_down"),
                                 beta, IP=NULL, missing_pct, missing_per_subject,
                                 miss_val=NA, dis_plot=FALSE, plot_trend=FALSE,
-                                zero_trunc=TRUE) {
+                                zero_trunc=TRUE, asynch_time=FALSE) {
     gen_microbiome_norm_feature_check(features, diff_abun_features)
     no_diff_feat <- features - diff_abun_features
     if(diff_abun_features > 0){
         message("Simulating Diff Bugs\n")
         diff_bugs <- pblapply(seq_len(diff_abun_features), function(x){
             mvrnorm_sim(n_control, n_treat, control_mean, sigma, num_timepoints,
-                        rho, corr_str, func_form, beta, IP, missing_pct,
-                        missing_per_subject, miss_val, dis_plot,
-                        plot_trend, zero_trunc)})
+                        t_interval, rho, corr_str, func_form, beta, IP,
+                        missing_pct, missing_per_subject, miss_val, dis_plot,
+                        plot_trend, zero_trunc, asynch_time)})
         diff_Y <- lapply(diff_bugs, function(x) return(x$Y))
         diff_Y <- matrix(unlist(diff_Y), nrow=diff_abun_features, byrow=TRUE)
     } else{
@@ -86,9 +91,9 @@ gen_norm_microbiome <- function(features=10, diff_abun_features=5,
         message("Simulating No-Diff Bugs\n")
         nodiff_bugs <- pblapply(seq_len(no_diff_feat), function(x){
             mvrnorm_sim(n_control, n_treat, control_mean, sigma, num_timepoints,
-                        rho, corr_str, func_form="linear", beta=c(0, 0), IP,
+                        t_interval, rho, corr_str, func_form, beta, IP,
                         missing_pct, missing_per_subject, miss_val, dis_plot,
-                        plot_trend, zero_trunc)})
+                        plot_trend, zero_trunc, asynch_time)})
         null_Y <- lapply(nodiff_bugs, function(x) return(x$Y))
         null_Y <- matrix(unlist(null_Y), nrow=no_diff_feat, byrow=TRUE)
     } else{

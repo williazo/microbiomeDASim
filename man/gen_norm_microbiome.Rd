@@ -4,12 +4,28 @@
 \alias{gen_norm_microbiome}
 \title{Generate Longitduinal Differential Abundance from Multivariate Normal}
 \usage{
-gen_norm_microbiome(features = 10, diff_abun_features = 5, n_control,
-  n_treat, control_mean, sigma, num_timepoints, rho, corr_str = c("ar1",
-  "compound", "ind"), func_form = c("linear", "quadratic", "cubic", "M",
-  "W", "L_up", "L_down"), beta, IP = NULL, missing_pct,
-  missing_per_subject, miss_val = NA, dis_plot = FALSE,
-  plot_trend = FALSE, zero_trunc = TRUE)
+gen_norm_microbiome(
+  features = 10,
+  diff_abun_features = 5,
+  n_control,
+  n_treat,
+  control_mean,
+  sigma,
+  num_timepoints,
+  t_interval,
+  rho,
+  corr_str = c("ar1", "compound", "ind"),
+  func_form = c("linear", "quadratic", "cubic", "M", "W", "L_up", "L_down"),
+  beta,
+  IP = NULL,
+  missing_pct,
+  missing_per_subject,
+  miss_val = NA,
+  dis_plot = FALSE,
+  plot_trend = FALSE,
+  zero_trunc = TRUE,
+  asynch_time = FALSE
+)
 }
 \arguments{
 \item{features}{numeric value specifying the number of features/microbes to
@@ -31,6 +47,10 @@ deviation for both control and treated individuals.}
 
 \item{num_timepoints}{integer value specifying the number of timepoints per
 subject.}
+
+\item{t_interval}{numeric vector of length two specifying the interval of
+time from which to draw observatoins [t_1, t_q]. Assumed to be equally
+spaced over the interval unless \code{asynch_time} is set to TRUE.}
 
 \item{rho}{value for the correlation parameter. must be between [0, 1].
 see \code{\link[microbiomeDASim]{mvrnorm_corr_gen}} for details.}
@@ -70,6 +90,9 @@ not. by default plotting is turned off.}
 
 \item{zero_trunc}{logical indicator designating whether simulated outcomes
 should be zero truncated. default is set to TRUE}
+
+\item{asynch_time}{logical indicator designed to randomly sample timepoints
+over a specified interval if set to TRUE. default is FALSE.}
 }
 \value{
 This function returns a list with the following objects
@@ -84,8 +107,8 @@ Generate Longitduinal Differential Abundance from Multivariate Normal
 \examples{
 gen_norm_microbiome(features = 5, diff_abun_features = 2,
                n_control = 10, n_treat = 10, control_mean = 8, sigma = 1,
-               num_timepoints = 5, rho = 0.8, corr_str = "compound",
-               func_form = "linear", beta =  c(0, 1), missing_pct = 0.3,
-               missing_per_subject = 2)
+               num_timepoints = 5, t_inverval=c(0, 4), rho = 0.8,
+               corr_str = "compound", func_form = "linear", beta =  c(0, 1),
+               missing_pct = 0.3, missing_per_subject = 2)
 
 }

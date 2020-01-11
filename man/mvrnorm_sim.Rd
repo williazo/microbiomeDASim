@@ -4,11 +4,26 @@
 \alias{mvrnorm_sim}
 \title{Simulate Microbiome Longitudinal Data from Multivariate Random Normal}
 \usage{
-mvrnorm_sim(n_control, n_treat, control_mean, sigma, num_timepoints, rho,
-  corr_str = c("ar1", "compound", "ind"), func_form = c("linear",
-  "quadratic", "cubic", "M", "W", "L_up", "L_down"), beta, IP = NULL,
-  missing_pct, missing_per_subject, miss_val = NA, dis_plot = FALSE,
-  plot_trend = FALSE, zero_trunc = TRUE)
+mvrnorm_sim(
+  n_control,
+  n_treat,
+  control_mean,
+  sigma,
+  num_timepoints,
+  t_interval,
+  rho,
+  corr_str = c("ar1", "compound", "ind"),
+  func_form = c("linear", "quadratic", "cubic", "M", "W", "L_up", "L_down"),
+  beta,
+  IP = NULL,
+  missing_pct,
+  missing_per_subject,
+  miss_val = NA,
+  dis_plot = FALSE,
+  plot_trend = FALSE,
+  zero_trunc = TRUE,
+  asynch_time = FALSE
+)
 }
 \arguments{
 \item{n_control}{integer value specifying the number of control individuals}
@@ -22,8 +37,14 @@ value.}
 \item{sigma}{numeric value specifying the global population standard
 deviation for both control and treated individuals.}
 
-\item{num_timepoints}{integer value specifying the number of timepoints per
-subject.}
+\item{num_timepoints}{either an integer value specifying the number of
+timepoints per subject or a vector of timepoints for each subject. If
+supplying a vector the lenght of the vector must equal the total number of
+subjects.}
+
+\item{t_interval}{numeric vector of length two specifying the interval of
+time from which to draw observatoins [t_1, t_q]. Assumed to be equally
+spaced over the interval unless \code{asynch_time} is set to TRUE.}
 
 \item{rho}{value for the correlation parameter. must be between [0, 1].
 see \code{\link[microbiomeDASim]{mvrnorm_corr_gen}} for details.}
@@ -63,6 +84,9 @@ not. by default plotting is turned off.}
 
 \item{zero_trunc}{logical indicator designating whether simulated outcomes
 should be zero truncated. default is set to TRUE}
+
+\item{asynch_time}{logical indicator designed to randomly sample timepoints
+over a specified interval if set to TRUE. default is FALSE.}
 }
 \value{
 This function returns a list with the following objects:
@@ -94,8 +118,8 @@ num_subjects_per_group <- 20
 sim_obj <- mvrnorm_sim(n_control=num_subjects_per_group,
                        n_treat=num_subjects_per_group,
                        control_mean=5, sigma=1, num_timepoints=5,
-                       rho=0.95, corr_str='ar1', func_form='linear',
-                       beta=c(0, 0.25),
+                       t_interval=c(0, 4), rho=0.95, corr_str='ar1',
+                       func_form='linear', beta=c(0, 0.25),
                        missing_pct=0.6, missing_per_subject=2)
 #checking the output
 head(sim_obj$df)

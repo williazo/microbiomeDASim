@@ -4,8 +4,13 @@
 \alias{mean_trend}
 \title{Function for Generating Various Longitudinal Mean Trends}
 \usage{
-mean_trend(timepoints, form = c("linear", "quadratic", "cubic", "M", "W",
-  "L_up", "L_down"), beta, IP = NULL, plot_trend = FALSE)
+mean_trend(
+  timepoints,
+  form = c("linear", "quadratic", "cubic", "M", "W", "L_up", "L_down"),
+  beta,
+  IP = NULL,
+  plot_trend = FALSE
+)
 }
 \arguments{
 \item{timepoints}{numeric vector specifying the points to fit the functional

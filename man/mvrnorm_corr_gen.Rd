@@ -4,8 +4,16 @@
 \alias{mvrnorm_corr_gen}
 \title{Generate Multivariate Random Normal Longitudinal Data}
 \usage{
-mvrnorm_corr_gen(n, obs, mu, sigma, rho, corr_str = c("ar1", "compound",
-  "ind"), zero_trunc = TRUE)
+mvrnorm_corr_gen(
+  n,
+  obs,
+  t,
+  mu,
+  sigma,
+  rho,
+  corr_str = c("ar1", "compound", "ind"),
+  zero_trunc = TRUE
+)
 }
 \arguments{
 \item{n}{integer scalar representing the total number of individuals}
@@ -15,6 +23,8 @@ indivdiual. If an integer then all indivdiuals are assummed to have the same
 number of obsevations. If a vector, then the vector must have length equal
 to \code{n} where each element specifies the number of observations for
 the \eqn{i^{th}} individual.}
+
+\item{t}{vector corresponding to the timepoints for each individual.}
 
 \item{mu}{integer or vector specifying the mean value for individuals.
 If an integer then all indivdiuals are assummed to have the same mean.
@@ -29,7 +39,7 @@ correlation between. assumes that the correlation is consistent for all
 subjects.}
 
 \item{corr_str}{character value specifying the correlation structure.
-Currently available methods are 'ar1', 'compound', and 'ind' which
+Currently available methods are \'ar1\', \'compound\', and \'ind\' which
 correspond to first-order autoregressive, compound or equicorrelation,
 and independence respecitvely.}
 

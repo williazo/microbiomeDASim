@@ -4,10 +4,10 @@
 \alias{sigma_corr_function}
 \title{Generating the longitudinal correlation matrix for repeated observations}
 \usage{
-sigma_corr_function(obs, sigma, corr_str, rho)
+sigma_corr_function(t, sigma, corr_str, rho)
 }
 \arguments{
-\item{obs}{number of repeated observations per individual}
+\item{t}{timepoints for repeated observations}
 
 \item{sigma}{the standard deviation parameter for the covariance matrix}
 
