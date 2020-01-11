@@ -180,6 +180,9 @@ mvrnorm_sim <- function(n_control, n_treat, control_mean, sigma, num_timepoints,
 #' uniform distribution over the study interval with the restriction that the
 #' first observation must occur at t_1.
 #'
+#' @return
+#' Returns a list of the number of timepoints and the times for each unit
+#'
 #' @keywords internal
 timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
                               missing_per_subject){

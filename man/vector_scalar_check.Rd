@@ -4,7 +4,7 @@
 \alias{vector_scalar_check}
 \title{Checking input for scalar or vector valued}
 \usage{
-vector_scalar_check(input, n)
+vector_scalar_check(input, n, N)
 }
 \arguments{
 \item{input}{a variable that will be supplied that we want to either check
@@ -12,6 +12,9 @@ the length or replicate to the specified length}
 
 \item{n}{an integer value specifying the desired vector length if a scalar
 is provided}
+
+\item{N}{an integer value specifying the total number of observations across
+individuals.}
 }
 \value{
 return a vector that has same length as specified n

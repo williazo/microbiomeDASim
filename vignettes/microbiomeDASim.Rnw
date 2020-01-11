@@ -231,18 +231,12 @@ $$Y\sim\text{N}_{4}\begin{pmatrix}
 \end{pmatrix}
 $$
 
-Below we show how to generate data in the package \texttt{microbiomeDASim}
-with these specifications.
-<<pkg_load,warning=FALSE,message=FALSE>>=
-library(microbiomeDASim)
-@
-
 Next, we can now look at sample data generated for our trivial example,
 <<tr_ex,fig.align='center',fig.height=4,fig.width=6,warning=FALSE,tidy=FALSE>>=
 triv_ex <- mvrnorm_sim(n_control=10, n_treat=10, control_mean=2,
-                        sigma=1, num_timepoints=2, rho=0.8,
+                        sigma=1, num_timepoints=2, t_interval=c(0, 1), rho=0.8,
                         corr_str="ar1", func_form="linear",
-                        beta= c(0, 1), missing_pct=0,
+                        beta= c(1, 2), missing_pct=0,
                         missing_per_subject=0, dis_plot=TRUE)
 head(triv_ex$df)
 triv_ex$Sigma[seq_len(2), seq_len(2)]
@@ -265,9 +259,10 @@ functional form, and then simulate data with this trend.
 true_mean <- mean_trend(timepoints=1:10, form="L_up", beta=0.5, IP=5,
                             plot_trend=TRUE)
 hockey_sim <- mvrnorm_sim(n_control=10, n_treat=10, control_mean=2, sigma=1,
-                            num_timepoints=10, rho=0.8, corr_str="ar1",
-                            func_form="L_up", beta= 0.5, IP=5, missing_pct=0,
-                            missing_per_subject=0, dis_plot=TRUE)
+                            num_timepoints=10, t_interval=c(0, 9), rho=0.8,
+                            corr_str="ar1", func_form="L_up", beta= 0.5, IP=5,
+                            missing_pct=0, missing_per_subject=0, dis_plot=TRUE,
+                            asynch_time=TRUE)
 @
 
 The \texttt{mvrnorm\_sim} method generates a single feature with a specified
@@ -282,7 +277,8 @@ same type of functional form.
 <<bug_gen, tidy=FALSE>>=
 bug_gen <- gen_norm_microbiome(features=6, diff_abun_features=3, n_control=30,
                                 n_treat=20, control_mean=2, sigma=2,
-                                num_timepoints=4, rho=0.9, corr_str="compound",
+                                num_timepoints=4, t_interval=c(0, 3),
+                                rho=0.9, corr_str="compound",
                                 func_form="M", beta=c(4, 3), IP=c(2, 3.3, 6),
                                 missing_pct=0.2, missing_per_subject=2,
                                 miss_val=0)
