@@ -4,35 +4,21 @@
 \alias{mvrnorm_corr_gen}
 \title{Generate Multivariate Random Normal Longitudinal Data}
 \usage{
-mvrnorm_corr_gen(
-  n,
-  obs,
-  t,
-  mu,
-  sigma,
-  rho,
-  corr_str = c("ar1", "compound", "ind"),
-  zero_trunc = TRUE
-)
+mvrnorm_corr_gen(n, obs, t, mu, sigma, rho,
+    corr_str = c("ar1", "compound", "ind"), zero_trunc = TRUE)
 }
 \arguments{
 \item{n}{integer scalar representing the total number of individuals}
 
-\item{obs}{integer or vector specifying the number of observations per
-indivdiual. If an integer then all indivdiuals are assummed to have the same
-number of obsevations. If a vector, then the vector must have length equal
-to \code{n} where each element specifies the number of observations for
-the \eqn{i^{th}} individual.}
+\item{obs}{vector of length \code{n} specifying the number of observations
+per indivdiual.}
 
 \item{t}{vector corresponding to the timepoints for each individual.}
 
-\item{mu}{integer or vector specifying the mean value for individuals.
-If an integer then all indivdiuals are assummed to have the same mean.
-If a vector, then the vector must have length equal to \code{n} where each
-element specifies the mean for the \eqn{i^{th}} individual.}
+\item{mu}{vector specifying the mean value for individuals.}
 
-\item{sigma}{numeric scalar or vector specifying the standard deviation for
-observations.}
+\item{sigma}{scalar specifying the standard deviation for
+all observations.}
 
 \item{rho}{numeric scalar value between [0, 1] specifying the amount of
 correlation between. assumes that the correlation is consistent for all
@@ -68,6 +54,9 @@ For this methodology we assume that we draw a set of \code{n} independent each
 with \eqn{q_{i}} observations.
 }
 \examples{
-mvrnorm_corr_gen(n=15, obs=4, mu=20, sigma=2, rho=0.9, corr_str="ar1")
-
+size <- 15
+reps <- 4
+N <- size*reps
+mvrnorm_corr_gen(n=size, obs=rep(reps, size), t=rep(seq_len(4), size),
+                    mu=rep(1, N), sigma=2, rho=0.9, corr_str="ar1")
 }

@@ -56,7 +56,7 @@ To install \texttt{microbiomeDASim} from \textit{Bioconductor} use the code
 below:
 <<pkg_install,eval=FALSE>>=
 if(!requireNamespace("BiocManager", quietly = TRUE)){
-   install.packages("BiocManager")
+    install.packages("BiocManager")
 }
 BiocManager::install("microbiomeDASim")
 @
@@ -233,8 +233,9 @@ $$
 
 Next, we can now look at sample data generated for our trivial example,
 <<tr_ex,fig.align='center',fig.height=4,fig.width=6,warning=FALSE,tidy=FALSE>>=
+require(microbiomeDASim)
 triv_ex <- mvrnorm_sim(n_control=10, n_treat=10, control_mean=2,
-                        sigma=1, num_timepoints=2, t_interval=c(0, 1), rho=0.8,
+                        sigma=1, num_timepoints=2, t_interval=c(1, 2), rho=0.8,
                         corr_str="ar1", func_form="linear",
                         beta= c(1, 2), missing_pct=0,
                         missing_per_subject=0, dis_plot=TRUE)

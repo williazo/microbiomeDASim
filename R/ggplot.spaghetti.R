@@ -31,6 +31,7 @@
 #'sim_obj <- mvrnorm_sim(n_control=num_subjects_per_group,
 #'                        n_treat=num_subjects_per_group,
 #'                        control_mean=5, sigma=1, num_timepoints=5,
+#'                        t_interval = c(0, 4),
 #'                        rho=0.95, corr_str='ar1', func_form='linear',
 #'                        beta=c(0, 0.25),
 #'                        missing_pct=0.6, missing_per_subject=2)

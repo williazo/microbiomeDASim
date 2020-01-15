@@ -185,7 +185,7 @@ mvrnorm_sim <- function(n_control, n_treat, control_mean, sigma, num_timepoints,
 #'
 #' @keywords internal
 timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
-                              missing_per_subject){
+                                missing_per_subject){
     time_len <- length(num_timepoints)
     if(time_len != 1 && time_len != n){
         stop("length of timepoints misspecified", call.=FALSE)
@@ -193,7 +193,7 @@ timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
     if(time_len == 1){
         num_timepoints <- rep(num_timepoints, n)
     }
-     if(!any(unlist(lapply(c(num_timepoints, t_interval), is.numeric)))){
+    if(!any(unlist(lapply(c(num_timepoints, t_interval), is.numeric)))){
         stop("num_timepoints and/or t_interval not numeric", call.=FALSE)
     }
     if(any(is.infinite(num_timepoints)) || any(num_timepoints<=0)){
@@ -201,7 +201,7 @@ timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
     }
     if(any(missing_per_subject > (num_timepoints - 1))){
         stop("Missing per subject greater than at least number of timepoints.",
-             call.=FALSE)
+                call.=FALSE)
     }
     if(length(t_interval)!=2){
         stop("time interval must be numeric vector of length 2", call.=FALSE)
@@ -230,18 +230,12 @@ timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
 #'  with \eqn{q_{i}} observations.
 #'
 #' @param n integer scalar representing the total number of individuals
-#' @param obs integer or vector specifying the number of observations per
-#'  indivdiual. If an integer then all indivdiuals are assummed to have the same
-#'   number of obsevations. If a vector, then the vector must have length equal
-#'    to \code{n} where each element specifies the number of observations for
-#'     the \eqn{i^{th}} individual.
+#' @param obs vector of length \code{n} specifying the number of observations
+#' per indivdiual.
 #' @param t vector corresponding to the timepoints for each individual.
-#' @param mu integer or vector specifying the mean value for individuals.
-#' If an integer then all indivdiuals are assummed to have the same mean.
-#' If a vector, then the vector must have length equal to \code{n} where each
-#'  element specifies the mean for the \eqn{i^{th}} individual.
-#' @param sigma numeric scalar or vector specifying the standard deviation for
-#'  observations.
+#' @param mu vector specifying the mean value for individuals.
+#' @param sigma scalar specifying the standard deviation for
+#'  all observations.
 #' @param rho numeric scalar value between \[0, 1\] specifying the amount of
 #'  correlation between. assumes that the correlation is consistent for all
 #'  subjects.
@@ -257,7 +251,11 @@ timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
 #' @importFrom Matrix bdiag
 #'
 #' @examples
-#' mvrnorm_corr_gen(n=15, obs=4, mu=20, sigma=2, rho=0.9, corr_str="ar1")
+#' size <- 15
+#' reps <- 4
+#' N <- size*reps
+#' mvrnorm_corr_gen(n=size, obs=rep(reps, size), t=rep(seq_len(4), size),
+#' mu=rep(1, N), sigma=2, rho=0.9, corr_str="ar1")
 #'
 #' @return
 #' This function returns a list with the following objects:
@@ -278,13 +276,11 @@ timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
 mvrnorm_corr_gen <- function(n, obs, t, mu, sigma, rho,
                                 corr_str=c("ar1", "compound", "ind"),
                                 zero_trunc=TRUE) {
-    if (!is.numeric(rho))
-        stop("rho must be numeric", call.=FALSE)
+    if (!is.numeric(rho)) stop("rho must be numeric", call.=FALSE)
     if (all.equal(n, as.integer(n)) != TRUE) {
         stop("n must be specified as an integer", call.=FALSE)
     }
-    if (n <= 0)
-        stop("n must be positive", call.=FALSE)
+    if (n <= 0) stop("n must be positive", call.=FALSE)
     if ((rho > 1 || rho < 0) && corr_str %in% c("ar1", "compound")) {
         stop("rho must be in [0, 1]", call.=FALSE)
     }
@@ -295,7 +291,7 @@ mvrnorm_corr_gen <- function(n, obs, t, mu, sigma, rho,
     s_df <- data.frame(time=t, id=rep(seq_len(n), obs))
     id_split <- split(s_df, s_df$id)
     block_diag_list <- lapply(id_split, function(s){
-        sigma_corr_function(t=s$time, sigma, corr_str,rho)
+        sigma_corr_function(t=s$time, sigma, corr_str, rho)
         })
     Sigma <- bdiag(block_diag_list)
     Y <- trunc_bugs(Y, N, Mu=mu, Sigma, zero_trunc)
@@ -303,36 +299,6 @@ mvrnorm_corr_gen <- function(n, obs, t, mu, sigma, rho,
     return(list(df=df, Y=Y, Mu=mu, Sigma=Sigma, N=N))
 }
 
-#' Checking input for scalar or vector valued
-#'
-#' This function allows users to specify just a scalar value as a parameter in
-#'  the generating function, and here it is converted to a vector
-#' of the proper length.
-#'
-#' Note that `n` refers to the number of individuals in the
-#' \code{\link[microbiomeDASim]{mvrnorm_corr_gen}}
-#'
-#' @param input a variable that will be supplied that we want to either check
-#'  the length or replicate to the specified length
-#' @param n an integer value specifying the desired vector length if a scalar
-#'  is provided
-#' @param N an integer value specifying the total number of observations across
-#' individuals.
-#'
-#' @keywords internal
-#'
-#' @return
-#' return a vector that has same length as specified n
-vector_scalar_check <- function(input, n, N) {
-    if (length(input) == 1) {
-        output <- rep(input, N)
-    } else if (length(input) == n | length(input) == N) {
-        output <- input
-    } else{
-        stop("incorrect vector length", call.=FALSE)
-    }
-    return(output)
-}
 
 #' Function for inducing truncation of outcome
 #'

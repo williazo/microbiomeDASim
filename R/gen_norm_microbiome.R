@@ -58,7 +58,7 @@
 #' @examples
 #'gen_norm_microbiome(features = 5, diff_abun_features = 2,
 #'                n_control = 10, n_treat = 10, control_mean = 8, sigma = 1,
-#'                num_timepoints = 5, t_inverval=c(0, 4), rho = 0.8,
+#'                num_timepoints = 5, t_interval=c(0, 4), rho = 0.8,
 #'                corr_str = "compound", func_form = "linear", beta =  c(0, 1),
 #'                missing_pct = 0.3, missing_per_subject = 2)
 #'
@@ -151,8 +151,8 @@ gen_microbiome_norm_feature_check <- function(features, diff_abun_features){
 #'
 #' @return
 #' final output list with the OTU table and corresponding bug feature data.frame
-final_output_gen <- function(no_diff_feat, diff_abun_features, diff_Y,
-                            null_Y, diff_bugs, nodiff_bugs, final_output=NULL){
+final_output_gen <- function(no_diff_feat, diff_abun_features, diff_Y, null_Y,
+                                diff_bugs, nodiff_bugs, final_output=NULL){
     if(no_diff_feat > 0  && diff_abun_features > 0){
         final_output$Y <- rbind(diff_Y, null_Y)
         s_id <- paste0("Sample_", rownames(diff_bugs[[1]]$df))
@@ -183,6 +183,7 @@ final_output_gen <- function(no_diff_feat, diff_abun_features, diff_Y,
         Y_vars <- grep("Y", names(nodiff_bugs[[1]]$df))
         final_output$bug_feat <- nodiff_bugs[[1]]$df[, -Y_vars]
         final_output$bug_feat$Sample_ID <- s_id
-        }
+    }
+    row.names(final_output$bug_feat) <- s_id
     return(final_output)
 }

@@ -4,27 +4,12 @@
 \alias{gen_norm_microbiome}
 \title{Generate Longitduinal Differential Abundance from Multivariate Normal}
 \usage{
-gen_norm_microbiome(
-  features = 10,
-  diff_abun_features = 5,
-  n_control,
-  n_treat,
-  control_mean,
-  sigma,
-  num_timepoints,
-  t_interval,
-  rho,
-  corr_str = c("ar1", "compound", "ind"),
-  func_form = c("linear", "quadratic", "cubic", "M", "W", "L_up", "L_down"),
-  beta,
-  IP = NULL,
-  missing_pct,
-  missing_per_subject,
-  miss_val = NA,
-  dis_plot = FALSE,
-  plot_trend = FALSE,
-  zero_trunc = TRUE,
-  asynch_time = FALSE
+gen_norm_microbiome(features = 10, diff_abun_features = 5, n_control, n_treat,
+    control_mean, sigma, num_timepoints, t_interval, rho,
+    corr_str = c("ar1", "compound", "ind"),
+    func_form = c("linear", "quadratic", "cubic", "M", "W", "L_up", "L_down"),
+    beta, IP = NULL, missing_pct, missing_per_subject, miss_val = NA,
+    dis_plot = FALSE, plot_trend = FALSE, zero_trunc = TRUE, asynch_time = FALSE
 )
 }
 \arguments{
@@ -106,9 +91,9 @@ Generate Longitduinal Differential Abundance from Multivariate Normal
 }
 \examples{
 gen_norm_microbiome(features = 5, diff_abun_features = 2,
-               n_control = 10, n_treat = 10, control_mean = 8, sigma = 1,
-               num_timepoints = 5, t_inverval=c(0, 4), rho = 0.8,
-               corr_str = "compound", func_form = "linear", beta =  c(0, 1),
-               missing_pct = 0.3, missing_per_subject = 2)
+                n_control = 10, n_treat = 10, control_mean = 8, sigma = 1,
+                num_timepoints = 5, t_interval=c(0, 4), rho = 0.8,
+                corr_str = "compound", func_form = "linear", beta =  c(0, 1),
+                missing_pct = 0.3, missing_per_subject = 2)
 
 }
