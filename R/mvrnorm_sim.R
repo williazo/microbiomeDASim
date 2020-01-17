@@ -291,10 +291,11 @@ mvrnorm_corr_gen <- function(n, obs, t, mu, sigma, rho,
     s_df <- data.frame(time=t, id=rep(seq_len(n), obs))
     id_split <- split(s_df, s_df$id)
     block_diag_list <- lapply(id_split, function(s){
-        sigma_corr_function(t=s$time, sigma, corr_str, rho)
+        sigma_corr_function(t=s$time, sigma=sigma, corr_str=corr_str, rho=rho)
         })
     Sigma <- bdiag(block_diag_list)
-    Y <- trunc_bugs(Y, N, Mu=mu, Sigma, zero_trunc)
+    if(det(as.matrix(Sigma))==0) zero_trunc=FALSE
+    Y <- trunc_bugs(Y=Y, N=N, Mu=mu, Sigma=Sigma, zero_trunc=zero_trunc)
     df <- data.frame(Y, ID=s_df$id, time=s_df$time)
     return(list(df=df, Y=Y, Mu=mu, Sigma=Sigma, N=N))
 }
@@ -321,10 +322,9 @@ mvrnorm_corr_gen <- function(n, obs, t, mu, sigma, rho,
 trunc_bugs <- function(Y, N, Mu, Sigma, zero_trunc){
     if (zero_trunc == TRUE) {
         if (N < 1000) {
-            accep_prob <- pmvnorm(lower=rep(0, N), mean=Mu,
-                                            sigma=as.matrix(Sigma))
+            accep_prob <- pmvnorm(rep(0, N), mean=Mu, sigma=as.matrix(Sigma))
             if (accep_prob[1] > 0.1) {
-                Y <- as.numeric(rtmvnorm(1, mean=Mu, sigma=Sigma,
+                Y <- as.numeric(rtmvnorm(1, mean=Mu, sigma=as.matrix(Sigma),
                                         lower=rep(0, N), algorithm="rejection"))
             } else {
                 Y <- mvrnorm(1, Mu, Sigma)
@@ -353,22 +353,13 @@ trunc_bugs <- function(Y, N, Mu, Sigma, zero_trunc){
 #' Return the covariance matrix V as a list
 sigma_corr_function <- function(t, sigma, corr_str, rho){
     if (corr_str == "ar1") {
-        H <- abs(outer(t, t, "-"))
-        V <- sigma * rho^H
-        p <- nrow(V)
-        pl <- seq_len(p)
-        V[cbind(pl, pl)] <- V[cbind(pl, pl)] * sigma
+        V <- sigma^2 * rho^abs(outer(t, t, "-"))
     } else if (corr_str == "compound") {
-        H <- outer(rep(1, length(t)), rep(1, length(t))) - diag(1, length(t))
-        V <- sigma * rho^H
-        p <- nrow(V)
-        pl <- seq_len(p)
-        V[cbind(pl, pl)] <- V[cbind(pl, pl)] * sigma
+        ones <- rep(1, length(t))
+        H <- as.matrix(outer(ones, ones) - diag(1, length(t)))
+        V <- sigma^2 * rho^H
     } else if (corr_str == "ind") {
-        V <- sigma * diag(1, length(t))
-        p <- nrow(V)
-        pl <- seq_len(p)
-        V[cbind(pl, pl)] <- V[cbind(pl, pl)] * sigma
+        V <- sigma^2 * diag(1, length(t))
     }
     return(V)
 }

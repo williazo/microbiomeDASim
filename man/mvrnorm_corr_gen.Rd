@@ -4,8 +4,16 @@
 \alias{mvrnorm_corr_gen}
 \title{Generate Multivariate Random Normal Longitudinal Data}
 \usage{
-mvrnorm_corr_gen(n, obs, t, mu, sigma, rho,
-    corr_str = c("ar1", "compound", "ind"), zero_trunc = TRUE)
+mvrnorm_corr_gen(
+  n,
+  obs,
+  t,
+  mu,
+  sigma,
+  rho,
+  corr_str = c("ar1", "compound", "ind"),
+  zero_trunc = TRUE
+)
 }
 \arguments{
 \item{n}{integer scalar representing the total number of individuals}
@@ -58,5 +66,6 @@ size <- 15
 reps <- 4
 N <- size*reps
 mvrnorm_corr_gen(n=size, obs=rep(reps, size), t=rep(seq_len(4), size),
-                    mu=rep(1, N), sigma=2, rho=0.9, corr_str="ar1")
+mu=rep(1, N), sigma=2, rho=0.9, corr_str="ar1")
+
 }

@@ -4,8 +4,13 @@
 \alias{timepoint_process}
 \title{Function for processing and checking the inputed timepoints}
 \usage{
-timepoint_process(num_timepoints, t_interval, n, asynch_time,
-    missing_per_subject)
+timepoint_process(
+  num_timepoints,
+  t_interval,
+  n,
+  asynch_time,
+  missing_per_subject
+)
 }
 \arguments{
 \item{num_timepoints}{either an integer value specifying the number of

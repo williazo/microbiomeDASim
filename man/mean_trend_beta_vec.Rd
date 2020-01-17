@@ -17,9 +17,7 @@ trend. See details of \code{\link{mean_trend}} for explanation for each form}
 \code{\link{mean_trend}} for explanation for each form}
 
 \item{timepoints}{numeric vector specifying the points to fit the functional
-trend.
-
-@keywords internal}
+trend.}
 }
 \value{
 Vector with beta values used to create mean_tend
@@ -27,3 +25,4 @@ Vector with beta values used to create mean_tend
 \description{
 Create beta vector for \code{mean_trend} for all functional forms
 }
+\keyword{internal}

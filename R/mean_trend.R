@@ -266,7 +266,7 @@ mean_trend_design_mat <- function(form, beta, IP, timepoints){
 #' @param timepoints numeric vector specifying the points to fit the functional
 #'  trend.
 #'
-#'  @keywords internal
+#' @keywords internal
 #'
 #' @return
 #' Vector with beta values used to create mean_tend

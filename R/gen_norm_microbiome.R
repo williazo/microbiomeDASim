@@ -91,9 +91,10 @@ gen_norm_microbiome <- function(features=10, diff_abun_features=5,
         message("Simulating No-Diff Bugs\n")
         nodiff_bugs <- pblapply(seq_len(no_diff_feat), function(x){
             mvrnorm_sim(n_control, n_treat, control_mean, sigma, num_timepoints,
-                        t_interval, rho, corr_str, func_form, beta, IP,
-                        missing_pct, missing_per_subject, miss_val, dis_plot,
-                        plot_trend, zero_trunc, asynch_time)})
+                        t_interval, rho, corr_str, func_form="linear",
+                        beta=c(0, 0), IP, missing_pct, missing_per_subject,
+                        miss_val, dis_plot, plot_trend, zero_trunc,
+                        asynch_time)})
         null_Y <- lapply(nodiff_bugs, function(x) return(x$Y))
         null_Y <- matrix(unlist(null_Y), nrow=no_diff_feat, byrow=TRUE)
     } else{
