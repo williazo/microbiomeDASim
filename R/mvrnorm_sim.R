@@ -122,13 +122,11 @@ mvrnorm_sim <- function(n_control, n_treat, control_mean, sigma, num_timepoints,
                             miss_time=missing_times)
     rand_dt$miss_data <- miss_data
     rand_dt$df$Y_obs <- rand_dt$df$Y
-    rand_dt$Y_obs <- rand_dt$Y
     for (i in seq_len(nrow(miss_data))) {
-        missing_ob <- which(rand_dt$df[, "ID"] == miss_data$miss_id[i] &
-                                rand_dt$df[, "time"] == miss_data$miss_time[i])
-        rand_dt$df[missing_ob, "Y_obs"] <- miss_val
-        rand_dt$Y_obs[missing_ob] <- miss_val
+        missing_id <- which(rand_dt$df[, "ID"] == miss_data$miss_id[i])
+        rand_dt$df[missing_id, ]$Y_obs[miss_data$miss_time[i]] <- miss_val
     }
+    rand_dt$Y_obs <- rand_dt$df$Y_obs
     if (dis_plot == TRUE) {
         p <- suppressWarnings(ggplot_spaghetti(y=rand_dt$df$Y_obs,
                             id=rand_dt$df$ID, time=rand_dt$df$time,
