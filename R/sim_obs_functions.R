@@ -162,6 +162,9 @@ mvrnorm_sim_obs <- function(id, time, group, ref, control_mean, sigma, rho,
 #' for each respective id
 #' @param ref character value identifying which group value to treat as control
 #' and which value to treat as treatment
+#' @param control_mean numeric value specifying the mean value for control
+#' subjects. all control subjects are assummed to have the same population mean
+#'  value.
 #' @param sigma numeric value specifying the global population standard
 #'  deviation for both control and treated individuals.
 #' @param rho value for the correlation parameter. must be between \[0, 1\].

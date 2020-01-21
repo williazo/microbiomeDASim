@@ -43,6 +43,10 @@ for each respective id}
 \item{ref}{character value identifying which group value to treat as control
 and which value to treat as treatment}
 
+\item{control_mean}{numeric value specifying the mean value for control
+subjects. all control subjects are assummed to have the same population mean
+value.}
+
 \item{sigma}{numeric value specifying the global population standard
 deviation for both control and treated individuals.}
 
