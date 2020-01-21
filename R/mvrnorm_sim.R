@@ -217,7 +217,7 @@ timepoint_process <- function(num_timepoints, t_interval, n, asynch_time,
         t <- lapply(num_timepoints, function(nt){
             t <- runif(nt-1, min=t_interval[1], max=t_interval[2])
             t <- t[order(t)]
-            t <- c(0, t)
+            t <- c(t_interval[1], t)
         })
     }
     t <- unlist(t)
