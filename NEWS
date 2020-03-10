@@ -1,2 +1,16 @@
+version 1.1.6: (2020-03-10)
+	+ F1000 manuscript with package details accepted and available at <https://doi.org/10.12688/f1000research.20660.2>
+		+ Citation updated within package
+	+ Require study duration be specified when simulating observations
+	+ Implemented functionality to allow random asynchronous timepoints samples along the study duration
+	+ Additional functions to approximate observed longitudinal microbiome data
+	+ Convert simulated data into common data objects in either the metagenomeSeq or phyloseq packages
+	+ Existing function changes:
+		+ gen_norm_microbiome (must specify t_interval for study duration and additional option to specify asynchronous time points using asynch_time=TRUE)
+		+ mvrnorm_sim (must specify t_interval for study duration and additional option to specify asynchronous time points using asynch_time=TRUE)
+	+ New functions:
+		+ conversion_functions (convert simulated data to metagenomeSeq or phyloseq object)
+		+ sim_obs_functions (host of functions that allow users to specify discrete sampling timepoints and approximate observed longitudinal patterns)
+
 version 0.99.0: (2019-08-26)
 	+ Submitted to Bioconductor
