@@ -14,7 +14,7 @@ features that make typical simulation methods inappropriate. For an
 in-depth description of the types of problems this simulation package is
 designed to solve, plus basics of the functionality please refer to the
 F1000 manuscript
-[f1000research.20660.1](https://doi.org/10.12688/f1000research.20660.1).
+[f1000research.20660.2](https://doi.org/10.12688/f1000research.20660.2).
 
 ## Installation
 
