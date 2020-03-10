@@ -1,0 +1,15 @@
+citHeader("To cite microbiomeDASim in publications, please use:")
+
+citEntry(key = "williams2019microbiomedasim",
+  entry = "article",
+  author = personList(as.person("Justin Williams"),
+			as.person("Hector Corrada Bravo"),
+			as.person("Jennifer Tom"),
+			as.person("Joseph Nathaniel Paulson")),
+  title = "microbiomeDASim: Simulating longitudinal differential abundance for microbiome data [version 2; peer review: 2 approved]",
+  year = "2020",
+  journal = "F1000Research",
+  volume = 8,
+  number = 1769,
+  textVersion = "Williams J, Bravo HC, Tom J and Paulson JN. microbiomeDASim: Simulating longitudinal differential abundance for microbiome data [version 2; peer review: 2 approved]. F1000Research 2020, 8:1769 (https://doi.org/10.12688/f1000research.20660.2)"
+)
