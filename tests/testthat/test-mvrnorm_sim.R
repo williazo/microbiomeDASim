@@ -34,7 +34,7 @@ test_that("zero truncation", {
                 sigma=2, rho=0.8, num_timepoints=10, t_interval=c(0, 9),
                 func_form="linear", corr_str="ar1", beta=c(0, 1),
                 missing_pct=0, missing_per_subject=0, zero_trunc=TRUE)
-    Y_no_trunc <- mvrnorm_sim(n_control=10, n_treat=10, control_mean=3,
+    Y_no_trunc <- mvrnorm_sim(n_control=10, n_treat=10, control_mean=0,
                   sigma=2, rho=0.8, num_timepoints=10, t_interval=c(0, 9),
                   func_form="linear",corr_str="ar1", beta=c(0, 1),
                   missing_pct=0, missing_per_subject=0, zero_trunc=FALSE)
